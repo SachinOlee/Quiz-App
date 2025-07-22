@@ -1,0 +1,29 @@
+{
+  "questions": [
+    {
+      "category": "Math",
+      "questions": [
+        {
+          "question": "What is 5 + 3?",
+          "options": ["6", "7", "8", "9"],
+          "answer": "8"
+        },
+        {
+          "question": "What is 10 * 2?",
+          "options": ["20", "10", "5", "30"],
+          "answer": "20"
+        }
+      ]
+    },
+    {
+      "category": "Science",
+      "questions": [
+        {
+          "question": "What planet is known as the Red Planet?",
+          "options": ["Earth", "Mars", "Jupiter", "Venus"],
+          "answer": "Mars"
+        }
+      ]
+    }
+  ]
+}
