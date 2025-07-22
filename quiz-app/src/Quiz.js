@@ -1,38 +1,28 @@
-import React, { useState } from 'react';
-
-// Dummy data and component (replace with actual ones or separate imports)
-const quizData = [
-  {
-    category: 'Math',
-    questions: [
-      { question: '2 + 2 = ?', options: ['3', '4', '5'], answer: '4' },
-      { question: '5 - 3 = ?', options: ['1', '2', '3'], answer: '2' },
-    ],
-  },
-  {
-    category: 'Science',
-    questions: [
-      { question: 'Boiling point of water?', options: ['90°C', '100°C'], answer: '100°C' },
-    ],
-  },
-];
-
-const CategorySelector = ({ categories, onSelectCategory }) => (
-  <div>
-    <h2>Select a Category</h2>
-    {categories.map((category, index) => (
-      <button key={index} onClick={() => onSelectCategory(index)}>
-        {category}
-      </button>
-    ))}
-  </div>
-);
+import React, { useState, useEffect } from 'react';
 
 const Quiz = () => {
+  const [quizData, setQuizData] = useState([]);
+  const [loading, setLoading] = useState(true); // Optional: loading state
   const [currentCategory, setCurrentCategory] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
+
+  // ✅ Fetch questions from API
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const response = await fetch('https://your-api-endpoint.com/questions');
+        const data = await response.json();
+        setQuizData(data);  // Set data into state
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching questions:", error);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
 
   const categories = quizData.map(item => item.category);
   const selectedQuestions = currentCategory !== null ? quizData[currentCategory].questions : [];
@@ -63,10 +53,21 @@ const Quiz = () => {
     setShowScore(false);
   };
 
+  if (loading) {
+    return <p>Loading questions...</p>;
+  }
+
   return (
     <div className="quiz">
       {currentCategory === null ? (
-        <CategorySelector categories={categories} onSelectCategory={handleCategorySelect} />
+        <div>
+          <h2>Select a Category</h2>
+          {categories.map((category, index) => (
+            <button key={index} onClick={() => handleCategorySelect(index)}>
+              {category}
+            </button>
+          ))}
+        </div>
       ) : showScore ? (
         <div className="score-section">
           <p>You scored {score} out of {selectedQuestions.length}</p>
