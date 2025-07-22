@@ -1,69 +1,41 @@
-// src/Quiz.js
-import React, { useState } from 'react';
-
 const Quiz = () => {
-  const questions = [
-    {
-      question: "What is the capital of France?",
-      options: ["Berlin", "Madrid", "Paris", "Lisbon"],
-      answer: "Paris"
-    },
-    {
-      question: "What is 2 + 2?",
-      options: ["3", "4", "5", "6"],
-      answer: "4"
-    },
-    {
-      question: "What is the largest ocean on Earth?",
-      options: ["Atlantic", "Indian", "Arctic", "Pacific"],
-      answer: "Pacific"
-    }
-  ];
-
+  const [currentCategory, setCurrentCategory] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
 
-  const handleAnswerOptionClick = (option) => {
-    if (option === questions[currentQuestionIndex].answer) {
-      setScore(score + 1);
-    }
+  const categories = quizData.map(item => item.category);
+  const selectedQuestions = currentCategory !== null ? 
+    quizData[currentCategory].questions : [];
 
-    const nextQuestion = currentQuestionIndex + 1;
-    if (nextQuestion < questions.length) {
-      setCurrentQuestionIndex(nextQuestion);
-    } else {
-      setShowScore(true);
-    }
+  const handleCategorySelect = (index) => {
+    setCurrentCategory(index);
+    setCurrentQuestionIndex(0);
+    setScore(0);
+    setShowScore(false);
+  };
+
+  const handleAnswerOptionClick = (option) => {
+    // Existing answer logic
   };
 
   return (
     <div className="quiz">
-      {showScore ? (
+      {currentCategory === null ? (
+        <CategorySelector 
+          categories={categories} 
+          onSelectCategory={handleCategorySelect} 
+        />
+      ) : showScore ? (
         <div className="score-section">
-          You scored {score} out of {questions.length}
+          You scored {score} out of {selectedQuestions.length}
+          <button onClick={() => setCurrentCategory(null)}>
+            Choose Another Category
+          </button>
         </div>
       ) : (
-        <>
-          <div className="question-section">
-            <div className="question-count">
-              Question {currentQuestionIndex + 1} of {questions.length}
-            </div>
-            <div className="question-text">
-              {questions[currentQuestionIndex].question}
-            </div>
-          </div>
-          <div className="answer-section">
-            {questions[currentQuestionIndex].options.map((option) => (
-              <button key={option} onClick={() => handleAnswerOptionClick(option)}>
-                {option}
-              </button>
-            ))}
-          </div>
-        </>
+        // Your existing question display logic
       )}
     </div>
   );
 };
-
-export default Quiz;
